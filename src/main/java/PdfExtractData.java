@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -268,7 +269,7 @@ public class PdfExtractData extends JFrame {
             posa = getPosa(filteredData).split("~");
             // fill the hashtable with the results
             // if he is ΙΔΙΩΤΗΣ dont search for afm
-            if (getValue("ΕΠΩΝΥΜΙΑ~:", filteredData).equals("ΙΔΙΩΤΗΣ")){
+            if (getValue("ΕΠΩΝΥΜΙΑ~:", filteredData).equals("Ι∆ΙΩΤΗΣ")){
                 extractedData.put("afm", "000000000");
             }else extractedData.put("afm", getValue("Α.Φ.Μ.:", filteredData));
             extractedData.put("eidos_parastatikou", getEidosParastatikou(filteredData));
@@ -292,21 +293,28 @@ public class PdfExtractData extends JFrame {
             progBar.setValue(progBar.getValue() + 1);
             double total = 0.00;
 //            txtFileLines.forEach(lineArray -> {
-//                for (int i =0; i<lineArray.length; i++) {
-//                    System.out.println(lineArray[i]  + " ----------------------> " + i);
+//                if (lineArray.length > 4) {
+//                    System.out.println(lineArray[4] + "  ------------  " + extractedData.get("afm") + " contains: " + lineArray[4].contains(extractedData.get("afm")));
 //                }
+//                System.out.println(extractedData.get("afm").equals("000000000") || (lineArray[4].length() >= 9 && lineArray[4].contains(extractedData.get("afm"))));
 //            });
-            ArrayList<String[]> dataExported = (ArrayList<String[]>) txtFileLines.parallelStream().filter(lineArray -> lineArray.length > 1
+            ArrayList<String[]> dataExported = (ArrayList<String[]>) txtFileLines.parallelStream().filter(lineArray -> lineArray.length > 4
                     &&(lineArray[1]+lineArray[2].substring(0, 1)).equals(extractedData.get("seira"))
                     && lineArray[3].equals(extractedData.get("number"))
-                    /*&& (extractedData.get("afm").equals("000000000") || lineArray[4].contains(extractedData.get("afm")))*/
+                    && (extractedData.get("afm").equals("000000000") || (lineArray[4].length() >= 9 && lineArray[4].contains(extractedData.get("afm"))))
                     /* missing the date clause*/
             ).collect(Collectors.toList());
             for ( String[] lineArray: dataExported){
                 total += Double.valueOf(lineArray[lineArray.length-1].replace(",","."));
             }
-            if (!extractedData.get("ammount_to_pay").isEmpty() && total == Double.valueOf(extractedData.get("ammount_to_pay").replace(",","."))){
-                comparisonResults.append("* Το PDF: " + new File(pdfFileLocation).getName() + " βρέθηκε καταχωρημένο\n");
+            total = Double.valueOf(new DecimalFormat("##.##").format(total).replace(",","."));
+            if (!extractedData.get("ammount_to_pay").isEmpty() && total > 0.00) {
+//                System.out.println(total + "   was total and ammount to pay is: " + Double.valueOf(extractedData.get("ammount_to_pay").replace(",", ".")));
+                if (total == Double.valueOf(extractedData.get("ammount_to_pay").replace(",", "."))) {
+                    comparisonResults.append("* Το PDF: " + new File(pdfFileLocation).getName() + " βρέθηκε καταχωρημένο\n");
+                } else {
+                    comparisonResults.append("* Το PDF: " + new File(pdfFileLocation).getName() + " διαφέρει κατά " + Math.abs(total - Double.valueOf(extractedData.get("ammount_to_pay").replace(",", "."))) + "\n");
+                }
             }
 
         } catch (IOException e) {
