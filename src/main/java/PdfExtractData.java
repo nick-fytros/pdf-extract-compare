@@ -31,12 +31,11 @@ public class PdfExtractData extends JFrame {
     private JLabel pdfLabel, txtLabel;
     private JButton pdfBtn, txtBtn;
     private JTextArea comparisonResults;
-    // IMPORTANT CHANGE ALL IMAGE LOCATIONS TO getClass().getResource("/images/text.png") BEFORE PROD
-    private ImageIcon iconopentxt = new ImageIcon("images/text.png");
-    private ImageIcon iconopenpdf = new ImageIcon("images/pdf.png");
-    private ImageIcon iconcompare = new ImageIcon("images/compare.png");
-    private ImageIcon iconexit = new ImageIcon("images/exit.png");
-    private ImageIcon iconinfo = new ImageIcon("images/info.png");
+    private ImageIcon iconopentxt = new ImageIcon(getClass().getResource("/images/text.png"));
+    private ImageIcon iconopenpdf = new ImageIcon(getClass().getResource("/images/pdf.png)"));
+    private ImageIcon iconcompare = new ImageIcon(getClass().getResource("/images/compare.png"));
+    private ImageIcon iconexit = new ImageIcon(getClass().getResource("/images/exit.png"));
+    private ImageIcon iconinfo = new ImageIcon(getClass().getResource("/images/info.png"));
     private JProgressBar progBar;
 
     private String txtFilePath = "";
@@ -49,7 +48,7 @@ public class PdfExtractData extends JFrame {
 
     private void initUI() {
         // set the image to display on top left corner
-        ImageIcon webIcon = new ImageIcon("images/taxlisis_logo.png");
+        ImageIcon webIcon = new ImageIcon(getClass().getResource("/images/taxlisis_logo.png"));
         setIconImage(webIcon.getImage());
 
         createMenuBar();
