@@ -32,7 +32,7 @@ public class PdfExtractData extends JFrame {
     private JButton pdfBtn, txtBtn;
     private JTextArea comparisonResults;
     private ImageIcon iconopentxt = new ImageIcon(getClass().getResource("/images/text.png"));
-    private ImageIcon iconopenpdf = new ImageIcon(getClass().getResource("/images/pdf.png)"));
+    private ImageIcon iconopenpdf = new ImageIcon(getClass().getResource("/images/pdf.png"));
     private ImageIcon iconcompare = new ImageIcon(getClass().getResource("/images/compare.png"));
     private ImageIcon iconexit = new ImageIcon(getClass().getResource("/images/exit.png"));
     private ImageIcon iconinfo = new ImageIcon(getClass().getResource("/images/info.png"));
