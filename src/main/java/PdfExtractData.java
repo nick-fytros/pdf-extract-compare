@@ -248,7 +248,8 @@ public class PdfExtractData extends JFrame {
     }
 
     private void extractDataAndCompare(String pdfFileLocation) {
-        String filteredData = "";
+        String filteredDataFirstPage;
+        String filteredDataLastPage;
         Hashtable<String, String> extractedData = new Hashtable<String, String>();
         String[] stoixeiaParastatikou, posa;
 
@@ -256,26 +257,30 @@ public class PdfExtractData extends JFrame {
 
         Document pdf = PDF.open(pdfFileLocation);
         // get the last page
-        Page page = pdf.getPage(pdf.getPages().size()-1);
-        StringBuilder text = new StringBuilder(1024);
-        page.pipe(new OutputTarget(text));
+        Page firstPage = pdf.getPage(0);
+        Page lastPage = pdf.getPage(pdf.getPages().size()-1);
+        StringBuilder firstPageText = new StringBuilder(1024);
+        StringBuilder lastPageText = new StringBuilder(1024);
+        firstPage.pipe(new OutputTarget(firstPageText));
+        lastPage.pipe(new OutputTarget(lastPageText));
         try {
             pdf.close();
 
             // replaces all the whitespaces with single space
-            filteredData = text.toString().replaceAll("\\s+", "~");
+            filteredDataFirstPage = firstPageText.toString().replaceAll("\\s+", "~");
+            filteredDataLastPage = lastPageText.toString().replaceAll("\\s+", "~");
             try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("C:/Users/fitro/Downloads/export.txt"))) {
-                writer.write(filteredData);
+                writer.write(filteredDataFirstPage);
             }
 
-            stoixeiaParastatikou = getParastatikoData(filteredData).split("~");
-            posa = getPosa(filteredData).split("~");
+            stoixeiaParastatikou = getParastatikoData(filteredDataFirstPage).split("~");
+            posa = getPosa(filteredDataLastPage).split("~");
             // fill the hashtable with the results
             // if he is ΙΔΙΩΤΗΣ dont search for afm
-            if (getValue("ΕΠΩΝΥΜΙΑ~:", filteredData).equals("Ι∆ΙΩΤΗΣ")){
+            if (getValue("ΕΠΩΝΥΜΙΑ~:", filteredDataFirstPage).equals("Ι∆ΙΩΤΗΣ")){
                 extractedData.put("afm", "000000000");
-            }else extractedData.put("afm", getValue("Α.Φ.Μ.:", filteredData));
-            extractedData.put("eidos_parastatikou", getEidosParastatikou(filteredData));
+            }else extractedData.put("afm", getValue("Α.Φ.Μ.:", filteredDataFirstPage));
+            extractedData.put("eidos_parastatikou", getEidosParastatikou(filteredDataFirstPage));
             extractedData.put("seira", stoixeiaParastatikou[0]);
             extractedData.put("number", stoixeiaParastatikou[1]);
             extractedData.put("date", stoixeiaParastatikou[2]);
@@ -319,7 +324,7 @@ public class PdfExtractData extends JFrame {
                 } else {
                     comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " διαφέρει κατά " + new DecimalFormat("##.##").format(Math.abs(total - Double.valueOf(extractedData.get("ammount_to_pay").replace(",", ".")))) + " ευρώ\n");
                 }
-            }else if (posa.length > 3){
+            }else if (posa.length == 3){
                 comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " δεν είναι καταχωρημένο ή δεν υπάρχει το ΑΦΜ του στο txt\n");
             }
 
