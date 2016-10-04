@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import com.snowtide.PDF;
 import com.snowtide.pdf.Document;
 import com.snowtide.pdf.OutputTarget;
+import com.snowtide.pdf.Page;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -254,8 +255,10 @@ public class PdfExtractData extends JFrame {
         // DEVELOPED USING WITH SNOWTIDE PDF LIBRARY
 
         Document pdf = PDF.open(pdfFileLocation);
+        // get the last page
+        Page page = pdf.getPage(pdf.getPages().size()-1);
         StringBuilder text = new StringBuilder(1024);
-        pdf.pipe(new OutputTarget(text));
+        page.pipe(new OutputTarget(text));
         try {
             pdf.close();
 
@@ -279,7 +282,7 @@ public class PdfExtractData extends JFrame {
             // catch the case in which 'ΠΛΗΡΩΤΕΟ ΠΟΣΟ' πινακάκι is empty
             if (posa.length < 3){
                 // write the error on results TextArea
-                comparisonResults.append("* Το πινακάκι 'ΠΛΗΡΩΤΕΟ ΠΟΣΟ' δεν είναι συμπληρωμένο στο: " + new File(pdfFileLocation).getName() + "\n");
+                comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " δεν έχει το πινακάκι 'ΠΛΗΡΩΤΕΟ ΠΟΣΟ' συμπληρωμένο\n");
                 extractedData.put("synolo_aksias_ypok_fpa", "");
                 extractedData.put("synolo_fpa", "");
                 extractedData.put("ammount_to_pay", "");
@@ -311,10 +314,13 @@ public class PdfExtractData extends JFrame {
             if (!extractedData.get("ammount_to_pay").isEmpty() && total > 0.00) {
 //                System.out.println(total + "   was total and ammount to pay is: " + Double.valueOf(extractedData.get("ammount_to_pay").replace(",", ".")));
                 if (total == Double.valueOf(extractedData.get("ammount_to_pay").replace(",", "."))) {
-                    comparisonResults.append("* Το PDF: " + new File(pdfFileLocation).getName() + " βρέθηκε καταχωρημένο\n");
+                    // All good but don' t print anything to the label
+                    // comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " βρέθηκε καταχωρημένο\n");
                 } else {
-                    comparisonResults.append("* Το PDF: " + new File(pdfFileLocation).getName() + " διαφέρει κατά " + Math.abs(total - Double.valueOf(extractedData.get("ammount_to_pay").replace(",", "."))) + "\n");
+                    comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " διαφέρει κατά " + new DecimalFormat("##.##").format(Math.abs(total - Double.valueOf(extractedData.get("ammount_to_pay").replace(",", ".")))) + " ευρώ\n");
                 }
+            }else if (posa.length > 3){
+                comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " δεν είναι καταχωρημένο ή δεν υπάρχει το ΑΦΜ του στο txt\n");
             }
 
         } catch (IOException e) {
