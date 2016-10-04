@@ -252,6 +252,8 @@ public class PdfExtractData extends JFrame {
         String filteredDataLastPage;
         Hashtable<String, String> extractedData = new Hashtable<String, String>();
         String[] stoixeiaParastatikou, posa;
+        // variable to see if the current pdf is resolved
+        boolean pdfResolved = false;
 
         // DEVELOPED USING WITH SNOWTIDE PDF LIBRARY
 
@@ -269,9 +271,9 @@ public class PdfExtractData extends JFrame {
             // replaces all the whitespaces with single space
             filteredDataFirstPage = firstPageText.toString().replaceAll("\\s+", "~");
             filteredDataLastPage = lastPageText.toString().replaceAll("\\s+", "~");
-            try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("C:/Users/fitro/Downloads/export.txt"))) {
-                writer.write(filteredDataFirstPage);
-            }
+//            try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("C:/Users/fitro/Downloads/export.txt"))) {
+//                writer.write(filteredDataFirstPage);
+//            }
 
             stoixeiaParastatikou = getParastatikoData(filteredDataFirstPage).split("~");
             posa = getPosa(filteredDataLastPage).split("~");
@@ -291,6 +293,7 @@ public class PdfExtractData extends JFrame {
                 extractedData.put("synolo_aksias_ypok_fpa", "");
                 extractedData.put("synolo_fpa", "");
                 extractedData.put("ammount_to_pay", "");
+                pdfResolved = true;
             }else{
                 extractedData.put("synolo_aksias_ypok_fpa", posa[0]);
                 extractedData.put("synolo_fpa", posa[1]);
@@ -309,23 +312,24 @@ public class PdfExtractData extends JFrame {
             ArrayList<String[]> dataExported = (ArrayList<String[]>) txtFileLines.parallelStream().filter(lineArray -> lineArray.length > 4
                     &&(lineArray[1]+lineArray[2].substring(0, 1)).equals(extractedData.get("seira"))
                     && lineArray[3].equals(extractedData.get("number"))
-                    && (extractedData.get("afm").equals("000000000") || (lineArray[4].length() >= 9 && lineArray[4].contains(extractedData.get("afm"))))
                     /* missing the date clause*/
             ).collect(Collectors.toList());
             for ( String[] lineArray: dataExported){
-                total += Double.valueOf(lineArray[lineArray.length-1].replace(",","."));
+                if ((extractedData.get("afm").equals("000000000") || (lineArray[4].length() >= 9 && lineArray[4].contains(extractedData.get("afm"))))) {
+                    total += Double.valueOf(lineArray[lineArray.length - 1].replace(",", "."));
+                }else{
+                    comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " δεν έχει το ΑΦΜ του στο txt\n");
+                    pdfResolved = true;
+                    break;
+                }
             }
             total = Double.valueOf(new DecimalFormat("##.##").format(total).replace(",","."));
-            if (!extractedData.get("ammount_to_pay").isEmpty() && total > 0.00) {
-//                System.out.println(total + "   was total and ammount to pay is: " + Double.valueOf(extractedData.get("ammount_to_pay").replace(",", ".")));
-                if (total == Double.valueOf(extractedData.get("ammount_to_pay").replace(",", "."))) {
-                    // All good but don' t print anything to the label
-                    // comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " βρέθηκε καταχωρημένο\n");
-                } else {
+            if (!extractedData.get("ammount_to_pay").isEmpty() && total > 0.00 && !pdfResolved) {
+                if (total != Double.valueOf(extractedData.get("ammount_to_pay").replace(",", "."))) {
                     comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " διαφέρει κατά " + new DecimalFormat("##.##").format(Math.abs(total - Double.valueOf(extractedData.get("ammount_to_pay").replace(",", ".")))) + " ευρώ\n");
                 }
-            }else if (posa.length == 3){
-                comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " δεν είναι καταχωρημένο ή δεν υπάρχει το ΑΦΜ του στο txt\n");
+            }else if (!pdfResolved){
+                comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " δεν είναι καταχωρημένο\n");
             }
 
         } catch (IOException e) {
