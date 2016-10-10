@@ -310,7 +310,7 @@ public class PdfExtractData extends JFrame {
 //            });
             ArrayList<String[]> dataExported = (ArrayList<String[]>) txtFileLines.parallelStream().filter(lineArray -> lineArray.length > 4
                     &&(lineArray[1]+lineArray[2].substring(0, 1)).equals(extractedData.get("seira"))
-                    && lineArray[3].equals(extractedData.get("number"))
+                    &&(lineArray[3].equals(extractedData.get("number")) || lineArray[4].equals(extractedData.get("number")))
                     /* missing the date clause*/
             ).collect(Collectors.toList());
             for ( String[] lineArray: dataExported){

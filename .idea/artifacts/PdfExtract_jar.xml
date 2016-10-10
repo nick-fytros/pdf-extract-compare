@@ -7,7 +7,9 @@
       </element>
       <element id="module-output" name="PdfExtract" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/PDFxStream.jar" path-in-jar="/" />
-      <element id="dir-copy" path="$PROJECT_DIR$/images" />
+      <element id="directory" name="images">
+        <element id="dir-copy" path="$PROJECT_DIR$/images" />
+      </element>
     </root>
   </artifact>
 </component>
