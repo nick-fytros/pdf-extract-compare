@@ -314,7 +314,7 @@ public class PdfExtractData extends JFrame {
                     /* missing the date clause*/
             ).collect(Collectors.toList());
             for ( String[] lineArray: dataExported){
-                if ((extractedData.get("afm").equals("000000000") || (lineArray[4].length() >= 9 && lineArray[4].contains(extractedData.get("afm"))))) {
+                if ((extractedData.get("afm").equals("000000000") || (lineArray[4].length() >= 9 && lineArray[4].contains(extractedData.get("afm"))) || (lineArray[5].contains(extractedData.get("afm"))))) {
                     total += Double.valueOf(lineArray[lineArray.length - 1].replace(",", "."));
                 }else{
                     comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " δεν έχει το ΑΦΜ του στο txt\n");

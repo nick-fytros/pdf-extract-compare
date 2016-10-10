@@ -7,11 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d9696fa-be6f-412a-aee5-73355edefb27" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/PdfExtract_jar/PdfExtract.jar" afterPath="$PROJECT_DIR$/out/artifacts/PdfExtract_jar/PdfExtract.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/PdfExtractData$OpenPDFFileAction.class" afterPath="$PROJECT_DIR$/target/classes/PdfExtractData$OpenPDFFileAction.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/PdfExtractData$OpenTextFileAction.class" afterPath="$PROJECT_DIR$/target/classes/PdfExtractData$OpenTextFileAction.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/PdfExtractData.class" afterPath="$PROJECT_DIR$/target/classes/PdfExtractData.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/PdfExtract_jar.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/PdfExtract_jar.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/PdfExtractData.java" afterPath="$PROJECT_DIR$/src/main/java/PdfExtractData.java" />
     </list>
@@ -39,8 +34,8 @@
       <file leaf-file-name="PdfExtractData.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/PdfExtractData.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5364341">
-              <caret line="312" column="86" selection-start-line="312" selection-start-column="86" selection-end-line="312" selection-end-column="86" />
+            <state vertical-scroll-proportion="0.6418605">
+              <caret line="316" column="164" selection-start-line="316" selection-start-column="164" selection-end-line="316" selection-end-column="164" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -802,8 +797,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/PdfExtractData.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5364341">
-          <caret line="312" column="86" selection-start-line="312" selection-start-column="86" selection-end-line="312" selection-end-column="86" />
+        <state vertical-scroll-proportion="0.6418605">
+          <caret line="316" column="164" selection-start-line="316" selection-start-column="164" selection-end-line="316" selection-end-column="164" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
