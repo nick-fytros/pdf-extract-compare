@@ -22,6 +22,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import static java.lang.Math.abs;
+
 /**
  * Created by Nick Fytros on 19/9/2016.
  */
@@ -322,10 +324,10 @@ public class PdfExtractData extends JFrame {
                     break;
                 }
             }
-            total = Double.valueOf(new DecimalFormat("##.##").format(total).replace(",","."));
+            total = abs(Double.valueOf(new DecimalFormat("##.##").format(total).replace(",",".")));
             if (!extractedData.get("ammount_to_pay").isEmpty() && total > 0.00 && !pdfResolved) {
                 if (total != Double.valueOf(extractedData.get("ammount_to_pay").replace(",", "."))) {
-                    comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " διαφέρει κατά " + new DecimalFormat("##.##").format(Math.abs(total - Double.valueOf(extractedData.get("ammount_to_pay").replace(",", ".")))) + " ευρώ\n");
+                    comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " διαφέρει κατά " + new DecimalFormat("##.##").format(abs(total - Double.valueOf(extractedData.get("ammount_to_pay").replace(",", ".")))) + " ευρώ\n");
                 }
             }else if (!pdfResolved){
                 comparisonResults.append("* Το " + new File(pdfFileLocation).getName() + " δεν είναι καταχωρημένο\n");
