@@ -101,6 +101,14 @@ public class PdfExtractData extends JFrame {
                     for (String pdfPath: pdfFilePaths) {
                         extractDataAndCompare(pdfPath);
                     }
+                    // after the check for pdf is finished we check if there are extra data on the txt without pdfs corresponding to them
+                    if (txtFileLines.size() > 0){
+                        txtFileLines.forEach(lineArray -> {
+                            if (lineArray.length > 1) {
+                                comparisonResults.append("** Δεν βρέθηκε PDF αρχείο για την γραμμή " + lineArray[1] + " " + lineArray[2] + " " + lineArray[3] + " " + lineArray[4] + " του txt αρχείου. (ποσό: " + lineArray[lineArray.length-1] + " ευρώ)\n");
+                            }
+                        });
+                    }
                     System.gc();
                 };
                 Thread thread = new Thread(compare);
@@ -315,6 +323,9 @@ public class PdfExtractData extends JFrame {
                     &&(lineArray[3].equals(extractedData.get("number")) || lineArray[4].equals(extractedData.get("number")))
                     /* missing the date clause*/
             ).collect(Collectors.toList());
+            for ( String[] lineArray: dataExported){
+                txtFileLines.remove(lineArray);
+            }
             for ( String[] lineArray: dataExported){
                 if ((extractedData.get("afm").equals("000000000") || (lineArray[4].length() >= 9 && lineArray[4].contains(extractedData.get("afm"))) || (lineArray[5].contains(extractedData.get("afm"))))) {
                     total += Double.valueOf(lineArray[lineArray.length - 1].replace(",", "."));
